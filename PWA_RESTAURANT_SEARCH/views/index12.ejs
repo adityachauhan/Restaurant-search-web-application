@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%=title%></title>
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <link href="./css/shop-item.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:100,400,300' rel='stylesheet' type='text/css'>
+  <link href="./css/custom_slider.css" rel="stylesheet">
+  <!--<link href="./plugins/bootstrap-slider/slider.css" rel="stylesheet">-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The list of restaurants in New York">
+  <meta http-equiv="Cache-control" content="public">
+</head>
+<body ng-app="nycRestaurants" ng-controller="myController">
+<div id="topbar"></div>
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-3">
+      <center>
+        <img src="images/logo.png" alt="Restaurants" />
+      </center>
+
+      <form ng-submit="applyFilters()">
+        Browse by Borough: <span ng-bind="dropdownBorough">all</span>
+        <select name="dropdownBorough" ng-model="dropdownBorough" class="myDropdown form-control">
+          <option>Browse by borough</option>
+          <option ng-repeat="b in borough" value="{{b}}">{{b}}</option>
+        </select>
+        <br/>
+        Browse by cuisine: <span ng-bind="dropdownCuisines">all</span>
+        <select name="dropdownCuisines" ng-model="dropdownCuisines" class="myDropdown form-control">
+          <option>Browse by cuisine</option>
+          <option ng-repeat="cuisine in cuisines" value="{{cuisine}}">{{cuisine}}</option>
+        </select>
+        <br/>
+        Browse by distance:
+        <!--<input id="ex1" data-slider-id='ex1Slider' type="range" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>-->
+        <div class="slidecontainer">
+          <input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+          <p><span id = "demo"></span>km</p>
+        </div>
+        <br/>
+
+
+        <input class='btn fullwidth btn-default' type="submit" id="submit" value="Filter"/>
+        <p>Showing {{restaurants.length}} places to eat.</p>
+        <br/>
+        <label for="search">Search within the results:</label>
+        <input ng-model="q" id="search" class="form-control" placeholder="Search Restaurant">
+        <br/>
+      </form>
+    </div>
+    <div class="col-md-9">
+      <ul class="nav nav-tabs" id="guide-tabs">
+        <li role="presentation" class="tab1 active"><a href="#tab1default" data-toggle="tab"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
+        <li role="presentation" class="tab2"><a href="#tab2default" data-toggle="tab"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new</a></li>
+        <li role="presentation" class="tab3"><a href="#tab3default" data-toggle="tab"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span> Restaurant Page</a></li>
+        <li role="presentation" class="tab4"><a href="#tab4default" data-toggle="tab"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add reviews</a></li>
+      </ul>
+      <div class="panel-body">
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="tab1default">
+            <div id="map"></div>
+            <!--<br/>
+            <label for="search">Search witin the results:</label>
+            <input ng-model="q" id="search" class="form-control" placeholder="Filter text">
+            <br/>-->
+            <br/>
+            <h1>FILTERED RESTAURANTS</h1>
+            <br/>
+            <table border="0" width="100%">
+              <thead>
+              <tr>
+                <!--<th><p><span class="glyphicon glyphicon-remove btnRemove" aria-hidden="true"></span>Delete</p></th>-->
+                <th>Delete</th>
+                <th>Restaurant Name</th>
+                <!--<th>Address</th>
+                <th>Cuisine</th>
+                <th>Borough</th>-->
+                <th>Restaurant Page</th>
+                <!--<th>Add Reviews</th>-->
+                <!--<th><p><span class="glyphicon glyphicon-copy btnLove" aria-hidden="true"></span>Reviews</p></th>-->
+              </tr>
+              </thead>
+              <tbody>
+              <!-- tr ng-repeat="restaurant in restaurants" ng-class-odd="'odd'" ng-class-even="'even'"-->
+              <tr >
+                <td><a class='btnRemove' href="javascript:void(null)" ng-click="deleteRestaurant(restaurant._id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td>mohaned</td>
+                <!--<td>{{restaurant.address.zipcode}} - {{restaurant.address.street}}</td>-->
+                <!--<td>{{restaurant.cuisine}}</td>-->
+                <!--<td>{{restaurant.borough}}</td>-->
+                <!--<td class='centered'>{{restaurant.grades[0].grade}}</td>-->
+                <ul class="nav nav-tabs" id="guide-tabs">
+                <td><a class="btnLove" href="#tab3default" id="btnLove" data-toggle="tab"><span class="glyphicon glyphicon-copy" style="margin-left: 40px" aria-hidden="true"></span></a></td>
+                </ul>
+                <!--<td><a class="btnLove" href="javascript:void(null)" ng-click="loveRestaurant(restaurant._id)" ><span class="glyphicon glyphicon-plus-sign" style="margin-left: 40px" aria-hidden="true"></span></a></td>-->
+                <!--<td><button type="button" class="btn btn-info btn-lg" ng-click="deleteRestaurant(restaurant._id); loveRestaurant(restaurant._id)" >LINK</button></td>-->
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                <th colspan="5"> <div ng-controller="myController" class="other-controller">
+                    <div class="text-center">
+                      <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)">
+                        <ul class="pagination" ng-if="1 < pages.length || !autoHide">
+                          <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }"><a href="" ng-click="setCurrent(1)">&laquo;</a></li>
+                          <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }"><a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a></li>
+                          <li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }"><a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber}}</a></li>
+                          <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }"><a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a></li>
+                          <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == pagination.last }"><a href="" ng-click="setCurrent(pagination.last)">&raquo;</a></li>
+                        </ul>
+                      </dir-pagination-controls>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="tab2default">
+            <h3>Add a new restaurant</h3>
+            <form ng-submit="addRestaurant()">
+              <!-- This form submits its values to the function addRestaurant in the file app.js in the folder public/js. -->
+              <label for="name">Restaurant name</label>
+              <input type="text" class="form-control" id="name" ng-model="name" required name="name"  placeholder="Restaurant name">
+              <br/>
+              <fieldset>
+                <legend>Address</legend>
+                <label for="building">Building</label>
+                <input type="text" id="building" class="form-control" ng-model="building" name="building"  placeholder="Building">
+
+                <label>Coords</label>
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-model="lat" name="lat" value="40.763597" placeholder="Latitude">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-model="long" name="long" value="-73.992545" placeholder="Longitude">
+                  </div>
+                </div>
+
+                <label for="street">Street</label>
+                <input type="text" class="form-control" id="street" ng-model="street" name="street"  placeholder="Street">
+                <label for="zipcode">Zipcode</label>
+                <input type="text" class="form-control" id="zipcode" ng-model="zipcode" name="zipcode"  placeholder="Zipcode">
+
+                <label for="add_borough">Select borough</label>
+                <select id="add_borough" name="add_borough" ng-model="add_borough" class="form-control">
+                  <option ng-repeat="b in borough" value="{{b}}">{{b}}</option>
+                </select>
+              </fieldset>
+
+              <label for="add_cuisine">Select cuisine</label>
+              <select id="add_cuisine" name="add_cuisine" ng-model="add_cuisine" class="form-control">
+                <option ng-repeat="cuisine in cuisines" value="{{cuisine}}">{{cuisine}}</option>
+              </select>
+              <br/>
+              <input class='btn btn-default' type="submit" id="submit" value="Add restaurant"/>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="tab3default">
+            <h1>restaurant.name</h1>
+            <h4>restaurant.cuisine</h4>
+            <div id="favoriteslist">
+              <h1>restaurant.name</h1>
+              <h3>Cuisine : </h3><h4>{{restaurant.cuisine}}</h4>
+              <br/>
+              <h3>Address: </h3><h4>{{restaurant.address.street}} - {{restaurant.address.zipcode}}</h4>
+              <br/>
+              <h3>Borough: </h3><h4>{{restaurant.borough}}</h4>
+              <br/>
+              <h3>Reviews:</h3>
+              <ul>
+                <li ng-repeat="rev in restaurant.reviews">
+                  rev.usname rev.reviews
+                </li>
+              </ul>
+              <button class="btn btn-primary" id="ReviewBtn"><a href="#tab4default" style="color:white;" data-toggle="tab">Review</a></button>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="tab4default">
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <h3>Review {{' for '+ reviewRestaurant}}</h3>
+              </div>
+              <div class="panel-body">
+                <table class="table no-border">
+                  <tr>
+                    <td class="no-border"><b>Name</b> </td>
+                    <td class="no-border"> <input type="text" ng-model="reviewerName" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="no-border">
+                      <b> Review </b>
+                    </td>
+                    <td class="no-border">
+                      <input type="text" ng-model="review" />
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="no-border">
+                      <button class="btn btn-success" ng-click="submitReview()">Submit</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <hr>
+  <!-- Footer -->
+  <footer>
+    <div class="row">
+      <div class="col-lg-12">
+        <p>Copyright &copy; Yitong, Kieron, Aditya</p>
+      </div>
+    </div>
+  </footer>
+</div>
+<script type="text/javascript" src="./js/jquery-2.2.2.min.js"></script>
+<script type="text/javascript" src="./js/1.4.5/angular.min.js"></script>
+<script type="text/javascript" src="./js/1.4.5/angular-animate.min.js"></script>
+<script type="text/javascript" src="./js/1.4.5/angular-touch.min.js"></script>
+<script type="text/javascript" src="./js/1.4.5/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="./js/dirPagination.js"></script>
+<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyDnW0Tg6LWLop77232_WDkZ9DUq5w07-BA"></script>
+<script type="text/javascript" src="./js/custom.js"></script>
+<script type="text/javascript" src="./js/app.js?X=2"></script>
+<script type="text/javascript" src="./js/custom_slider.js"></script>
+<!--<script>
+    ('#btnReview').click(function () {
+        $('.nav-tabs > .active').next('li').find('a').trigger('click')
+    });
+</script>-->
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!-- Modal for restaurant details page and review page -->
+<div class="modal fade bs-example-modal-lg" id="restaurantDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title text-center" id="myModalLabel" style="font-family: Monaco, serif">Details</h4>
+            </div>
+            <div class="modal-body" style="overflow-y: scroll; max-height: calc(100% - 120px);">
+                <div class="tab-pane fade in active" id="tab3default">
+                    <h4>{{restaurant.cuisine}}</h4>
+                    <div id="favoriteslist" ng-repeat="restaurant in favoriterestaurants">
+                        <h4>Name: {{restaurant.name}}</h4>
+                        <h4>Cuisine : </h4><h4>{{restaurant.cuisine}}</h4>
+                        <br/>
+                        <h4>Address: </h4><h4>{{restaurant.address.street}} - {{restaurant.address.zipcode}}</h4>
+                        <br/>
+                        <h4>Borough: </h4><h4>{{restaurant.borough}}</h4>
+                        <br/>
+                        <h4>Write your review {{' for '+ reviewRestaurant}}: </h4>
+
+                        <form>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>Name</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div>
+                                        <input type="text" class="form-control modalInput" ng-model="reviewerName" id="reviewerName" name="reviewerName" placeholder="Your nickname" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 20px">
+                                <div class="col-sm-2">
+                                    <label>Review</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div>
+                                        <textarea type="text" rows="4" cols="5" class="form-control modalInput" ng-model="review" id="review" name="review" placeholder="Your review" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; margin-top: 20px">
+                                <button type="submit" class="btn btn-success" ng-click="submitReview(restaurant._id)">Submit Review</button>
+                            </div>
+                        </form>
+                         
+                        <!-- <table class="table no-border">
+                            <th>
+                                <td class="no-border"><b>Name</b></td>
+                                <td class="no-border"><b>Review</b></td>
+                            </th>
+                            <tr ng-repeat="rev in restaurant.reviews">
+                                <td>{{rev.rName}}</td>
+                                <td>{{rev.rComment}}</td>                                
+                            </tr>
+                        </table>  -->
+                        
+                        <h4>Reviews:</h4>
+                        <ul>
+                            <li ng-repeat="rev in restaurant.reviews">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>{{rev.rName}}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>{{rev.rComment}}</p>
+                                    </div>
+                                </div>
+
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

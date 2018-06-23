@@ -1,0 +1,72 @@
+<!-- Modal for adding new restaurant in the database-->
+<div class="modal fade bs-example-modal-lg" id="addRestaurantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title text-center" id="myModalLabel" style="font-family: Monaco, serif">Add New Restaurant</h4>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="addRestaurant()">
+                    <!-- This form submits its values to the function addRestaurant in the file app.js in the folder public/js. -->
+                    <fieldset>
+                        <div>
+                            <label for="name">Restaurant name</label>
+                            <input type="text" class="form-control modalInput" id="name" ng-model="name" required name="name"  placeholder="Restaurant name">
+                        </div>
+                        <div class="modalComponent">
+                            <label for="building">Building</label>
+                            <input type="text" id="building" class="form-control modalInput" ng-model="building" name="building"  placeholder="Building">
+                        </div>
+                        <div class="modalComponent">
+                            <label>Coords</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control modalInput" ng-model="lat" name="lat" value="40.763597" placeholder="Latitude">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control modalInput" ng-model="long" name="long" value="-73.992545" placeholder="Longitude">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modalComponent">
+                            <label for="street">Street</label>
+                            <input type="text" class="form-control modalInput" id="street" ng-model="street" name="street"  placeholder="Street">
+                        </div>
+                        <div class="modalComponent">
+                            <label for="zipcode">Zipcode</label>
+                            <input type="text" class="form-control modalInput" id="zipcode" ng-model="zipcode" name="zipcode"  placeholder="Zipcode">
+                        </div>
+                        <div class="modalComponent">
+                            <label for="add_borough">Select borough</label>
+                            <select id="add_borough" name="add_borough" ng-model="add_borough" class="form-control modalInput">
+                                <option ng-repeat="b in borough" value="{{b}}">{{b}}</option>
+                            </select>
+                        </div>
+                        <div class="modalComponent">
+                            <label for="add_cuisine">Select cuisine</label>
+                            <select id="add_cuisine" name="add_cuisine" ng-model="add_cuisine" class="form-control modalInput">
+                                <option ng-repeat="cuisine in cuisines" value="{{cuisine}}">{{cuisine}}</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <hr>
+                    <div class="row" style="text-align: center" class="modalComponent">
+                        <div class="col-sm-6">
+                            <input class='btn btn-default' type="submit" id="submit" value="Add restaurant"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--<div class="modal-footer" style="text-align:center">-->
+                <!--<button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">Cancel</button>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>

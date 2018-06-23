@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%=title%></title>
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link href="./css/shop-item.css" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Roboto:100,400,300' rel='stylesheet' type='text/css'>
+	<link href="./css/custom_slider.css" rel="stylesheet">
+    <link href="./css/navbarStyle.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/modal.css" rel="stylesheet">
+
+    <!--<link href="./plugins/bootstrap-slider/slider.css" rel="stylesheet">-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="The list of restaurants in New York">
+	<meta http-equiv="Cache-control" content="public">
+</head>
+
+<body ng-app="nycRestaurants" ng-controller="myController">
+<nav class="navbar navbar-custom navbar-fixed-top" id="nav-bar">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" ><img src="images/navLogo.png" width="30"></a>
+            <a class="navbar-brand" style="font-size:22px;font-weight:bold;color:black">Restaurant Search</a>
+            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">
+                <script>
+                    var realTime = new Date();
+                    var hour = realTime.getHours(0);
+                    if (hour >=5 && hour <= 8) {
+                        document.write("Want some breakfast? ");
+                    } else if (hour >= 9 && hour <= 11) {
+                        document.write("What for brunch? ");
+                    } else if (hour >=12 && hour <= 14) {
+                        document.write("Lunch time!");
+                    } else if (hour >=15 && hour <= 17) {
+                        document.write("Considering afternoon tea?");
+                    } else if (hour >=18 && hour <= 22) {
+                        document.write("Enjoy a fancy dinner! ");
+                    } else {
+                        document.write("Well...Diet time");
+                    }
+                </script>
+            </a>
+
+            <!--<a class="navbar-brand" style="font-size:22px;font-weight:bold;color:black">Easy Life</a>-->
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-right" id="navbarSupportedContent">
+            <ul class="px-nav-actions nav navbar-nav">
+                <li class="nav-item"><a href="#tab1default" class="nav-text" data-toggle="tab"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-text" data-toggle="modal" data-target="#addRestaurantModal"><span class="glyphicon glyphicon-plus"></span> Add Restaurant</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</nav>
+
+<header class="masthead text-center text-white d-flex"></header>
+
+<div style="z-index:5;display: block; position: fixed; top:80px">
+    <nav id="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header" style="text-align: center">
+            <img src="images/logo.png">
+        </div>
+        <div id="navTab">
+            <ul  class="nav nav-pills">
+                <li class="active">
+                    <a  href="#1b" data-toggle="tab">Search</a>
+                </li>
+                <li>
+                    <a href="#2b" data-toggle="tab">Results</a>
+                </li>
+            </ul>
+
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="1b">
+                    <form ng-submit="applyFilters()">
+                        <div>
+                            Browse by Borough: <span ng-bind="dropdownBorough">all</span>
+                            <select name="dropdownBorough" ng-model="dropdownBorough" class="myDropdown form-control navInput">
+                                <option>Browse by borough</option>
+                                <option ng-repeat="b in borough" value="{{b}}">{{b}}</option>
+                            </select>
+                        </div>
+                        <br/>
+                        <div>
+                            Browse by cuisine: <span ng-bind="dropdownCuisines">all</span>
+                            <select name="dropdownCuisines" ng-model="dropdownCuisines" class="myDropdown form-control navInput">
+                                <option>Browse by cuisine</option>
+                                <option ng-repeat="cuisine in cuisines" value="{{cuisine}}">{{cuisine}}</option>
+                            </select>
+                        </div>
+                        <br/>
+                        <div>
+                            <div>
+                                Browse by distance: <span id = "demo"></span>km
+                            </div>
+                            <br/>
+                            <div class="slidecontainer">
+                                <input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
+                            <input class='btn fullwidth btn-default' type="submit" id="submit" value="Search" style="border: none" />
+                            <p>Showing {{restaurants.length}} places to eat.</p>
+
+                        </div>
+
+                        <br/>
+                        <div>
+                            <label for="search">Search within the results:</label>
+                            <input ng-model="q" id="search" class="form-control navInput" placeholder="Search Restaurant">
+                        </div>
+                    </form>
+                </div> <!-- Panel 1 close-->
+
+                <!--Tan panel 2-->
+                <div class="tab-pane" id="2b" >
+                    <div class="row">
+                        <div class="col-sm-9" style="margin-top: 10px">
+                            {{restaurants.length}} restaurant found, show by:
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control" name="state" id="maxRows" style="margin-left: 0px; border: none;">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <!--<option value="5000">Show ALL Rows</option>-->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="restaurantTable" border="0" width="100%" class="table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;width: 40px">Id</th>
+                                    <th style="text-align: center;width: 200px">Name</th>
+                                    <th style="text-align: center;width: 120px">More Info</th>
+                                    <th style="text-align: center;width: 40px">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="{{restaurant._id}}" onmouseover='highlightMarker(this)' onmouseout='outshineMarker(this)' ng-class-odd="'odd'" ng-class-even="'even'" dir-paginate="restaurant in restaurants | filter:q | itemsPerPage: pageSize" current-page="currentPage">
+                                    <td style="text-align: center;width: 40px"></td>
+                                    <td style="text-align: left;width: 200px;">{{restaurant.name}}</td>
+                                    <td style="text-align: center;width: 120px"><a class="btnLove" data-toggle="modal" data-target="#restaurantDetailModal" ng-click="loveRestaurant(restaurant._id)"><span class="glyphicon glyphicon-info-sign" style="color: forestgreen" aria-hidden="true"></span></a></td>
+                                    <td style="text-align: center;width: 40px"><a class='btnRemove' href="javascript:void(null)" ng-click="deleteRestaurant(restaurant._id)"><span class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span></a></td>
+                                </tr>
+                            </tbody>
+                            <tfoot></tfoot>
+                            <div>
+                                <nav>
+                                    <ul class="pagination"></ul>
+                                </nav>
+                            </div>
+                        </table>
+                    </div>
+                </div> <!-- panel 2 close-->
+
+            </div>
+        </div>
+
+    </nav>
+</div>
+
+<div id="map"></div>
+
+</body>
+
+<footer id="footer">
+    <p style="padding-left: 100px">Copyright &copy; Yitong, Kieron, Aditya</p>
+</footer>
+
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+<script type="text/javascript" src="js/new.js"></script>
+<script type="text/javascript" src="js/1.4.5/angular.min.js"></script>
+<script type="text/javascript" src="js/1.4.5/angular-animate.min.js"></script>
+<script type="text/javascript" src="js/1.4.5/angular-touch.min.js"></script>
+<script type="text/javascript" src="js/1.4.5/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="js/dirPagination.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyDnW0Tg6LWLop77232_WDkZ9DUq5w07-BA"></script>
+<script type="text/javascript" src="js/custom.js"></script>
+<script type="text/javascript" src="js/app.js?X=2"></script>
+<script type="text/javascript" src="js/custom_slider.js"></script>
+<script type="text/javascript" src="js/frontend.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+        });
+    });
+
+    // ('#btnReview').click(function () {
+    //     $('.nav-tabs > .active').next('li').find('a').trigger('click')
+    // });
+</script>
+
+<!--<script>
+	('#btnReview').click(function () {
+		$('.nav-tabs > .active').next('li').find('a').trigger('click')
+	});
+</script>-->
+<%-include addRestaurantModal.ejs %>
+<%-include restaurantDetailModal.ejs %>
+
+</html>
