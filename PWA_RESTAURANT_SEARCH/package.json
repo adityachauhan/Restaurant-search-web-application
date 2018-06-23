@@ -1,0 +1,21 @@
+{
+  "name": "restaurant-search",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.16.0",
+    "express-session": "^1.15.6",
+    "http-errors": "~1.6.2",
+    "method-override": "^2.3.10",
+    "mongoose": "^5.0.14",
+    "morgan": "~1.9.0",
+    "serve-favicon": "^2.5.0"
+  }
+}
