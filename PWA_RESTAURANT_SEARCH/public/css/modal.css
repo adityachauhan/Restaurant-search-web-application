@@ -1,0 +1,22 @@
+.modal-content {
+    opacity: 0.8;
+    background-color: #f9ecd2;
+}
+
+#modalCloseBtn {
+    color: whitesmoke;
+    background-color: #e60;
+}
+
+#submit {
+    background-color: #28a428;
+    color: whitesmoke;
+}
+
+.modalInput {
+    border: none;
+}
+
+.modalComponent {
+    margin-top: 30px;
+}

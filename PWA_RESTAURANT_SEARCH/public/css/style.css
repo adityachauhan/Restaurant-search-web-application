@@ -1,0 +1,51 @@
+* {
+    font-family: Monaco, serif;
+}
+
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #fafafa;
+}
+
+p {
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: black;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    min-height: 800px;
+    background-color: #CCC;
+    z-index:1;
+}
+
+#footer {
+    text-align: right;
+    padding-right: 100px;
+    padding-top: 10px;
+    z-index: 999;
+    min-height: 50px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    opacity: 0.8;
+    background-color: wheat;
+}
